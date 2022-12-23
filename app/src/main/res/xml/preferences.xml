@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="General">
+
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:key="theme_pref"
+            android:defaultValue="false"
+            android:title="Dark mode"
+            android:summary="Enable dark mode"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="About"
+        app:iconSpaceReserved="false" >
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="ver_pref"
+            android:title="Version"
+            android:summary="1.0.0-alpha01" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="about_pref"
+            android:title="About"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
