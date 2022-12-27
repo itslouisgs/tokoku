@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> data;
     private LayoutInflater layoutInflater;
     private ItemClickListener itemClickListener;
+    private Button button;
 
     public RecyclerViewAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
@@ -54,7 +56,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.book);
-            itemView.setOnClickListener(this);
+            button = itemView.findViewById(R.id.addToListBtn);
+            button.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -67,5 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+
+        void onItemClick(int posiiton);
     }
 }

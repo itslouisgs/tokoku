@@ -28,6 +28,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"/>
+            <Button
+                android:id="@+id/addToListBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_to_list"
+                android:backgroundTint="@color/purple_700"
+
+                />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

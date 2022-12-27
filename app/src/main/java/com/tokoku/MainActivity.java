@@ -2,7 +2,6 @@ package com.tokoku;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,13 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
@@ -112,4 +104,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             recyclerView.setAdapter(adapter);
         }
     }
+
+    @Override
+    public void onItemClick(int posiiton){
+        int p = posiiton + 1;
+        Toast.makeText(MainActivity.this, "Item clicked: " + p,Toast.LENGTH_SHORT).show();
+    }
+
 }
