@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,17 +26,28 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private ArrayList<String> products;
+    private LocalStorageHelper localStorageHelper;
+    private Button btnAddToList;
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        localStorageHelper = new LocalStorageHelper(this);
+
+        products = localStorageHelper.getLists();
 
         this.products = new ArrayList<>();
 
         new GetDataTask().execute();
+
+//        btnAddToList = findViewById(R.id.addToListBtn);
+//
+//        btnAddToList.setOnClickListener(v->addItemToList());
+
 
         recyclerView = findViewById(R.id.bookList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,9 +119,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     }
 
     @Override
-    public void onItemClick(int posiiton){
-        int p = posiiton + 1;
+    public void onItemClick(int position){
+        int p = position + 1;
         Toast.makeText(MainActivity.this, "Item clicked: " + p,Toast.LENGTH_SHORT).show();
+    }
+
+    private void addItemToList(){
+        products.add(String.valueOf(products).toString());
+
+        adapter.notifyItemInserted(0);
+
+        localStorageHelper.saveLists(products);
     }
 
 }
