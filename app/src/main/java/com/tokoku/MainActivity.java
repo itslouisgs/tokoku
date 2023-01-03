@@ -20,14 +20,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private ArrayList<String> products;
-    private LocalStorageHelper localStorageHelper;
-    private Button btnAddToList;
+    Button addList;
+    private ArrayList<String> newList;
+    private String file = "internalStorageFile.txt";
+    private String data;
+
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
@@ -36,18 +42,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        localStorageHelper = new LocalStorageHelper(this);
-
-        products = localStorageHelper.getLists();
 
         this.products = new ArrayList<>();
 
         new GetDataTask().execute();
-
-//        btnAddToList = findViewById(R.id.addToListBtn);
-//
-//        btnAddToList.setOnClickListener(v->addItemToList());
-
 
         recyclerView = findViewById(R.id.bookList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -68,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } else if (item.getItemId() == R.id.settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if (item.getItemId() == R.id.showList){
+            startActivity(new Intent(MainActivity.this,ShowListActivity.class));
         }
 
         return true;
@@ -75,7 +75,25 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
+//        addList = findViewById(R.id.addToListBtn);
+            try {
+                FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
+                fOut.write(adapter.getItem(position).toString().getBytes());
+                fOut.close();
+            }  catch (Exception e) {
+                e.printStackTrace();
+            }
+        try {
+            FileInputStream fin = openFileInput(file);
+            int c;
+            String temp="";
+            while( (c = fin.read()) != -1){
+                temp = temp + Character.toString((char)c);
+            }
+            Toast.makeText(getBaseContext(),temp,Toast.LENGTH_SHORT).show();
+        }
+        catch(Exception e){
+        }
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, Void> {
@@ -124,12 +142,5 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         Toast.makeText(MainActivity.this, "Item clicked: " + p,Toast.LENGTH_SHORT).show();
     }
 
-    private void addItemToList(){
-        products.add(String.valueOf(products).toString());
-
-        adapter.notifyItemInserted(0);
-
-        localStorageHelper.saveLists(products);
-    }
 
 }
