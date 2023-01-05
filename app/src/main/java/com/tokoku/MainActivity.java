@@ -29,15 +29,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private ArrayList<String> products;
-    Button addList;
-    private ArrayList<String> newList;
     private String file = "internalStorageFile.txt";
-    private String data;
-
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,29 +70,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-//        addList = findViewById(R.id.addToListBtn);
-            try {
-                FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
-                fOut.write(adapter.getItem(position).toString().getBytes());
-                fOut.close();
-            }  catch (Exception e) {
-                e.printStackTrace();
-            }
         try {
-            FileInputStream fin = openFileInput(file);
-            int c;
-            String temp="";
-            while( (c = fin.read()) != -1){
-                temp = temp + Character.toString((char)c);
-            }
-            Toast.makeText(getBaseContext(),temp,Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception e){
+            FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
+            fOut.write((adapter.getItem(position) + "\n").getBytes());
+            fOut.close();
+            Toast.makeText(getBaseContext(),"Item saved",Toast.LENGTH_SHORT).show();
+        }  catch (Exception e) {
+            Toast.makeText(getBaseContext(),"Failed to save item",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -107,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         @Override
         protected Void doInBackground(Void... arg0) {
             HTTPHandler handler = new HTTPHandler();
-            String json = handler.makeServiceCall("https://fakestoreapi.com/products?limit=20");
+            String json = handler.makeServiceCall("https://fakestoreapi.com/products");
 
             if (json != null) {
                 try {
@@ -115,15 +99,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
                     for (int i = 0; i < jsonArray.length(); i++){
                         JSONObject product =  jsonArray.getJSONObject(i);
-
                         products.add(product.getString("title"));
                     }
                 } catch (JSONException e) {
-                    products.add("No products yet.");
                     Log.e(TAG, "JSONException: " + e.getMessage());
                 }
             }
-
             return null;
         }
 
@@ -135,12 +116,4 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             recyclerView.setAdapter(adapter);
         }
     }
-
-    @Override
-    public void onItemClick(int position){
-        int p = position + 1;
-        Toast.makeText(MainActivity.this, "Item clicked: " + p,Toast.LENGTH_SHORT).show();
-    }
-
-
 }
