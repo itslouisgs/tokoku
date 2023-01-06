@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } else if (item.getItemId() == R.id.settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        } else if (item.getItemId() == R.id.showList){
-            startActivity(new Intent(MainActivity.this,ShowListActivity.class));
         }
 
         return true;
