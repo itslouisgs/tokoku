@@ -2,10 +2,10 @@ package com.tokoku;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,19 +24,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private ArrayList<String> products;
+    private String file = "internalStorageFile.txt";
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
@@ -81,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } else if (item.getItemId() == R.id.settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if (item.getItemId() == R.id.showList){
+            startActivity(new Intent(MainActivity.this,ShowListActivity.class));
         }
 
         return true;
@@ -88,11 +88,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
+        try {
+            FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
+            fOut.write((adapter.getItem(position) + "\n").getBytes());
+            fOut.close();
+            Toast.makeText(getBaseContext(),"Item saved",Toast.LENGTH_SHORT).show();
+        }  catch (Exception e) {
+            Toast.makeText(getBaseContext(),"Failed to save item",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -102,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         @Override
         protected Void doInBackground(Void... arg0) {
             HTTPHandler handler = new HTTPHandler();
-            String json = handler.makeServiceCall("https://fakestoreapi.com/products?limit=20");
+            String json = handler.makeServiceCall("https://fakestoreapi.com/products");
 
             if (json != null) {
                 try {
@@ -110,15 +117,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
                     for (int i = 0; i < jsonArray.length(); i++){
                         JSONObject product =  jsonArray.getJSONObject(i);
-
                         products.add(product.getString("title"));
                     }
                 } catch (JSONException e) {
-                    products.add("No products yet.");
                     Log.e(TAG, "JSONException: " + e.getMessage());
                 }
             }
-
             return null;
         }
 
