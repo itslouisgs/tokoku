@@ -3,6 +3,8 @@ package com.tokoku;
 import static android.os.ParcelFileDescriptor.MODE_APPEND;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -15,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,7 +72,7 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
     @Override
     public void onItemClick(View view, int position) {
         try {
-            FileOutputStream fOut = getContext().openFileOutput(file, MODE_APPEND);
+            FileOutputStream fOut = getContext().openFileOutput(file, Context.MODE_APPEND);
             fOut.write((adapter.getItem(position) + "\n").getBytes());
             fOut.close();
             Toast.makeText(getActivity(),"Item saved",Toast.LENGTH_SHORT).show();
@@ -82,11 +83,12 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
     }
 
     private class GetDataTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(getActivity(), "Fetching data...", Toast.LENGTH_LONG).show();
+            progressDialog = ProgressDialog.show(getActivity(), "", "Loading...", true);
         }
 
         @Override
@@ -112,8 +114,10 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            adapter.setData(products);
 
+            progressDialog.dismiss();
+
+            adapter.setData(products);
             recyclerView.setAdapter(adapter);
         }
     }
