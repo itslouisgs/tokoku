@@ -31,7 +31,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
             <Button
-                android:id="@+id/delete_btn"
+                android:id="@+id/btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/remove_from_list"
