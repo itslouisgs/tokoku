@@ -1,5 +1,7 @@
 package com.tokoku;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,10 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNavigation;
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         addListener();
 
         setFragment(new HomeFragment());
+        subscribeToNotifications();
+
     }
 
     private void initComponents() {
@@ -50,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.homeFragmentPlaceholder, f);
         ft.commit();
+    }
+
+    private void subscribeToNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("web_app")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Done";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed";
+                        }
+                    }
+                });
     }
 
     @Override

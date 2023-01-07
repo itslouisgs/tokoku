@@ -54,18 +54,6 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
 
         adapter = new RecyclerViewAdapter(getActivity(), R.layout.home_recycler_view);
         adapter.setClickListener(this);
-
-        FirebaseMessaging.getInstance().subscribeToTopic("web_app")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Done";
-                        if (!task.isSuccessful()) {
-                            msg = "Failed";
-                        }
-                        Log.d(TAG, msg);
-                    }
-                });
     }
 
     @Override

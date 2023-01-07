@@ -19,6 +19,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this,"Tokoku")
                 .setContentTitle(title)
                 .setContentText(message)
+                .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
                 .setAutoCancel(true);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
