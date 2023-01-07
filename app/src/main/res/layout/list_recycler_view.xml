@@ -23,16 +23,15 @@
             android:orientation="vertical"
             android:layout_margin="8dp"
             >
-
             <TextView
-                android:id="@+id/book"
+                android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:textSize="16sp"
                 android:textStyle="bold" />
             <Button
-                android:id="@+id/removeFromListBtn"
+                android:id="@+id/btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/remove_from_list"

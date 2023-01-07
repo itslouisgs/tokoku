@@ -57,10 +57,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.book);
-            button = itemView.findViewById(R.id.addToListBtn);
+            textView = itemView.findViewById(R.id.text);
+            button = itemView.findViewById(R.id.btn);
             button.setOnClickListener(this);
-//            itemView.setOnClickListener(this);
         }
 
         @Override
