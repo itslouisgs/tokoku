@@ -1,6 +1,5 @@
 package com.tokoku;
 
-import static android.os.ParcelFileDescriptor.MODE_APPEND;
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.app.ProgressDialog;
@@ -50,10 +49,10 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
 
         new HomeFragment.GetDataTask().execute();
 
-        recyclerView = getView().findViewById(R.id.bookList);
+        recyclerView = getView().findViewById(R.id.itemList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new RecyclerViewAdapter(getActivity());
+        adapter = new RecyclerViewAdapter(getActivity(), R.layout.home_recycler_view);
         adapter.setClickListener(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic("web_app")
@@ -73,7 +72,7 @@ public class HomeFragment extends Fragment implements RecyclerViewAdapter.ItemCl
     public void onItemClick(View view, int position) {
         try {
             FileOutputStream fOut = getContext().openFileOutput(file, Context.MODE_APPEND);
-            fOut.write((adapter.getItem(position) + "\n").getBytes());
+            fOut.write((adapter.getItem(position) + ";").getBytes());
             fOut.close();
             Toast.makeText(getActivity(),"Item saved",Toast.LENGTH_SHORT).show();
         }  catch (Exception e) {

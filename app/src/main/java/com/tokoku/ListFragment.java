@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +22,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
     private String filename = "internalStorageFile.txt";
+    private ArrayList<String> list;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
     TextView tv;
 
     @Override
@@ -35,11 +41,31 @@ public class ListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Context context = getActivity();
-        String str = readFile(context, filename);
+        showSavedList();
+    }
 
-        tv = getView().findViewById(R.id.internal_item);
-        tv.setText(str);
+    public void showSavedList(){
+        String str = readFile(getActivity(), filename);
+        String[] x = str.split(";");
+
+        this.list = new ArrayList<>();
+
+        for(String a : x){
+            if (x.length-1 >= 0 && a.equals(x[x.length-1])){
+                break;
+            }
+            list.add(a);
+        }
+
+        getView().findViewById(R.id.emptyNotice).setVisibility(list.isEmpty() ? View.VISIBLE : View.INVISIBLE);
+
+        recyclerView = getView().findViewById(R.id.myListView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new RecyclerViewAdapter(getActivity(), R.layout.list_recycler_view);
+        adapter.setData(list);
+
+        recyclerView.setAdapter(adapter);
     }
 
     public String readFile(Context context, String filename) {
