@@ -9,8 +9,9 @@
     <TextView
         android:id="@+id/emptyNotice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="Your list is empty."
+        android:gravity="center"
         android:textAlignment="center" />
 
     <androidx.recyclerview.widget.RecyclerView
