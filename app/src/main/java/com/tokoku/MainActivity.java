@@ -29,11 +29,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
-    private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
-    private ArrayList<String> products;
-    private String file = "internalStorageFile.txt";
+public class MainActivity extends AppCompatActivity {
+    private BottomNavigationView mBottomNavigation;
 
     private static final String TAG = HTTPHandler.class.getSimpleName();
 
@@ -42,29 +39,34 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.products = new ArrayList<>();
+        initComponents();
+        addListener();
 
-        new GetDataTask().execute();
+        setFragment(new HomeFragment());
+    }
 
-        recyclerView = findViewById(R.id.bookList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    private void initComponents() {
+        mBottomNavigation = findViewById(R.id.buttom_navigation);
+    }
 
-        adapter = new RecyclerViewAdapter(this, R.layout.home_recycler_view);
-        adapter.setClickListener(this);
+    private void addListener() {
+        mBottomNavigation.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    setFragment(new HomeFragment());
+                    break;
+                case R.id.navigation_list:
+                    setFragment(new ListFragment());
+                    break;
+            }
+            return true;
+        });
+    }
 
-        FirebaseMessaging.getInstance().subscribeToTopic("web_app")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Done";
-                        if (!task.isSuccessful()) {
-                            msg = "Failed";
-                        }
-                        Log.d(TAG, msg);
-
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void setFragment(Fragment f){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.homeFragmentPlaceholder, f);
+        ft.commit();
     }
 
     @Override
@@ -79,59 +81,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } else if (item.getItemId() == R.id.settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        } else if (item.getItemId() == R.id.showList){
-            startActivity(new Intent(MainActivity.this,ShowListActivity.class));
         }
 
         return true;
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        try {
-            FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
-            fOut.write((adapter.getItem(position) + ";").getBytes());
-            fOut.close();
-            Toast.makeText(getBaseContext(),"Item saved",Toast.LENGTH_SHORT).show();
-        }  catch (Exception e) {
-            Toast.makeText(getBaseContext(),"Failed to save item",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
-
-    private class GetDataTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(MainActivity.this, "Fetching data...", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            HTTPHandler handler = new HTTPHandler();
-            String json = handler.makeServiceCall("https://fakestoreapi.com/products");
-
-            if (json != null) {
-                try {
-                    JSONArray jsonArray = new JSONArray(json);
-
-                    for (int i = 0; i < jsonArray.length(); i++){
-                        JSONObject product =  jsonArray.getJSONObject(i);
-                        products.add(product.getString("title"));
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "JSONException: " + e.getMessage());
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            adapter.setData(products);
-
-            recyclerView.setAdapter(adapter);
-        }
     }
 }

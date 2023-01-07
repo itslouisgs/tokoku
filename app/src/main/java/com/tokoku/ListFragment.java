@@ -1,17 +1,18 @@
 package com.tokoku;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -19,29 +20,28 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ShowListActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
-    private static final String TAG = ShowListActivity.class.getSimpleName();
+public class ListFragment extends Fragment {
+    private String filename = "internalStorageFile.txt";
     TextView tv;
-    ArrayList<String> list;
-    ListView listSavedFiles;
-    private RecyclerView recyclerView;
-    private RecyclerViewAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_list);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         showSavedList();
     }
 
     void showSavedList(){
-        Context context = getApplicationContext();
+        Context context = getContext();
         String filename = "internalStorageFile.txt";
-        String str = read_file(context, filename);
+        String str = readFile(context, filename);
         String[] x = str.split(";");
 
         this.list = new ArrayList<>();
@@ -64,7 +64,7 @@ public class ShowListActivity extends AppCompatActivity implements RecyclerViewA
         recyclerView.setAdapter(adapter);
     }
 
-    public String read_file(Context context, String filename) {
+    public String readFile(Context context, String filename) {
         try {
             FileInputStream fis = context.openFileInput(filename);
             InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
@@ -76,19 +76,11 @@ public class ShowListActivity extends AppCompatActivity implements RecyclerViewA
             }
             return sb.toString();
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File Not Found: " + e.getMessage());
             return "";
         } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, "Unsuported: " + e.getMessage());
             return "";
         } catch (IOException e) {
-            Log.e(TAG, "IOExeption: " + e.getMessage());
             return "";
         }
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-
     }
 }
