@@ -16,9 +16,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LayoutInflater layoutInflater;
     private ItemClickListener itemClickListener;
     private Button button;
+    private int layout;
 
-    public RecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context, int layout) {
         this.layoutInflater = LayoutInflater.from(context);
+        this.layout = layout;
     }
 
     public void setData(ArrayList<String> data){
@@ -27,7 +29,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.recycler_view, parent, false);
+        View view = layoutInflater.inflate(layout, parent, false);
         return new ViewHolder(view);
     }
 

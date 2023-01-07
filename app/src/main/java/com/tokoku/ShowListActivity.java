@@ -46,19 +46,22 @@ public class ShowListActivity extends AppCompatActivity implements RecyclerViewA
 
         this.list = new ArrayList<>();
         for(String a : x){
+            if (a.equals(x[x.length-1])){
+                break;
+            }
             list.add(a);
-            Log.d(String.valueOf(list), "showSavedList: ");
         }
 
-        recyclerView = findViewById(R.id.bookList);
+        Log.d("LIST", "| " + list.get(list.size() - 1) + " |");
+
+        recyclerView = findViewById(R.id.myListView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new RecyclerViewAdapter(this);
+        adapter = new RecyclerViewAdapter(this, R.layout.list_recycler_view);
         adapter.setClickListener(this);
 
         adapter.setData(list);
         recyclerView.setAdapter(adapter);
-
     }
 
     public String read_file(Context context, String filename) {

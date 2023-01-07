@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         recyclerView = findViewById(R.id.bookList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new RecyclerViewAdapter(this);
+        adapter = new RecyclerViewAdapter(this, R.layout.home_recycler_view);
         adapter.setClickListener(this);
 
         FirebaseMessaging.getInstance().subscribeToTopic("web_app")
