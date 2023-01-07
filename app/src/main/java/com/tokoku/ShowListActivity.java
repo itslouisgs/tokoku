@@ -1,10 +1,15 @@
 package com.tokoku;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,22 +19,46 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ShowListActivity extends AppCompatActivity {
+public class ShowListActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
     private static final String TAG = ShowListActivity.class.getSimpleName();
     TextView tv;
+    ArrayList<String> list;
+    ListView listSavedFiles;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_list);
+
+        showSavedList();
+    }
+
+    void showSavedList(){
         Context context = getApplicationContext();
         String filename = "internalStorageFile.txt";
         String str = read_file(context, filename);
+        String[] x = str.split(";");
 
-        tv = (TextView)findViewById(R.id.internal_item);
+        this.list = new ArrayList<>();
+        for(String a : x){
+            list.add(a);
+            Log.d(String.valueOf(list), "showSavedList: ");
+        }
 
-        tv.setText(str);
+        recyclerView = findViewById(R.id.bookList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new RecyclerViewAdapter(this);
+        adapter.setClickListener(this);
+
+        adapter.setData(list);
+        recyclerView.setAdapter(adapter);
+
     }
 
     public String read_file(Context context, String filename) {
@@ -53,5 +82,10 @@ public class ShowListActivity extends AppCompatActivity {
             Log.e(TAG, "IOExeption: " + e.getMessage());
             return "";
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
     }
 }

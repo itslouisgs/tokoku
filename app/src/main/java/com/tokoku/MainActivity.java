@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     public void onItemClick(View view, int position) {
         try {
             FileOutputStream fOut = openFileOutput(file,MODE_APPEND);
-            fOut.write((adapter.getItem(position) + "\n").getBytes());
+            fOut.write((adapter.getItem(position) + ";").getBytes());
             fOut.close();
             Toast.makeText(getBaseContext(),"Item saved",Toast.LENGTH_SHORT).show();
         }  catch (Exception e) {
