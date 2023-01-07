@@ -2,6 +2,7 @@ package com.tokoku;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
         Preference themePref = (Preference)findPreference("theme_pref");
+        ((SwitchPreference) themePref).setChecked(getResources().getString(R.string.theme).equals("Dark"));
+
         themePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(@NonNull Preference preference) {
