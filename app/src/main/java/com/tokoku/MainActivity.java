@@ -31,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         initComponents();
         addListener();
 
-        setFragment(new HomeFragment());
+        if (savedInstanceState == null) {
+            setFragment(new HomeFragment());
+        }
+
         subscribeToNotifications();
 
     }
