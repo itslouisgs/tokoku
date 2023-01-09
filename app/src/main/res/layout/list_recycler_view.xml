@@ -30,14 +30,6 @@
                 android:layout_marginBottom="5dp"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-            <Button
-                android:id="@+id/btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/remove_from_list"
-                android:backgroundTint="@color/purple_700"
-                android:textColor="@color/white"
-                />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

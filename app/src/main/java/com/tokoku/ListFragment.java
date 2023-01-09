@@ -1,22 +1,23 @@
 package com.tokoku;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,13 +35,27 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        View root = inflater.inflate(R.layout.fragment_list, container, false);
+
+        FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearList();
+                Toast.makeText(getActivity(),"List deleted",Toast.LENGTH_SHORT).show();
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.homeFragmentPlaceholder, new ListFragment())
+                        .commit();
+            }
+        });
+        return root;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         showSavedList();
     }
 
@@ -66,6 +81,12 @@ public class ListFragment extends Fragment {
         adapter.setData(list);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    public void clearList(){
+       File dir = getActivity().getFilesDir();
+       File file = new File(dir, filename);
+       file.delete();
     }
 
     public String readFile(Context context, String filename) {
