@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +32,6 @@ public class ListFragment extends Fragment {
     private RecyclerViewAdapter adapter;
     TextView tv;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,7 +42,12 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 clearList();
-                Toast.makeText(getActivity(),"List deleted, please click your list again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"List deleted",Toast.LENGTH_SHORT).show();
+
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.homeFragmentPlaceholder, new ListFragment())
+                        .commit();
             }
         });
         return root;
