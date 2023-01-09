@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="Tokoku merupakan sebuah aplikasi mobile e-commerce yang menampilkan katalog produk, di mana user dapat menambah produk ke dalam suatu list."
+        android:text="Tokoku is an Android app built with Android Studio (Java) showing list of available items on a shop in which the users can add them to their own list. This project is created for Mobile Programming's group assignment by Louis Gustavo, Frisco Lieyanto, Jonathan Ernest Suteja, and Melvin Mario."
         android:textAlignment="viewStart"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
